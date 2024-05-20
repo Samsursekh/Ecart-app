@@ -1,9 +1,10 @@
 "use client";
 
+import { useCart } from "@/context/CartContext";
 import { useSearch } from "@/context/SearchProvider";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 
 interface Product {
   id: string;
@@ -18,71 +19,20 @@ interface Product {
 }
 
 function CartPage(): JSX.Element {
-  const [products, setProducts] = useState<Product[]>([]);
+  const {
+    products,
+    fetchData,
+    removeFromCart,
+    increaseQuantity,
+    decreaseQuantity,
+  } = useCart();
+
   const router = useRouter();
   const { searchQuery } = useSearch();
 
   useEffect(() => {
     fetchData();
-  }, []);
-
-  const fetchData = async (): Promise<void> => {
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_CART_API}`);
-      const data = await response.json();
-
-      const productsWithQuantity = data.map((product: Product) => ({
-        ...product,
-        quantity: product.quantity || 1,
-      }));
-
-      setProducts(productsWithQuantity);
-      console.log(data, "Data getting or not ");
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  const removeFromCart = async (productId: string): Promise<void> => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_CART_API}/${productId}`,
-        {
-          method: "DELETE",
-        }
-      );
-      if (response.ok) {
-        console.log("Product removed from cart successfully");
-        setProducts((prevProducts) =>
-          prevProducts.filter((product) => product.id !== productId)
-        );
-      } else {
-        console.error("Failed to remove product from cart");
-      }
-    } catch (error) {
-      console.error("Error removing product from cart:", error);
-    }
-  };
-
-  const increaseQuantity = (productId: string) => {
-    setProducts((prevProducts) =>
-      prevProducts.map((product) =>
-        product.id === productId
-          ? { ...product, quantity: product.quantity + 1 }
-          : product
-      )
-    );
-  };
-
-  const decreaseQuantity = (productId: string) => {
-    setProducts((prevProducts) =>
-      prevProducts.map((product) =>
-        product.id === productId && product.quantity > 1
-          ? { ...product, quantity: product.quantity - 1 }
-          : product
-      )
-    );
-  };
+  }, [fetchData]);
 
   const calculateTotal = (): number => {
     return products.reduce(

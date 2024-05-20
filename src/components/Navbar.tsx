@@ -11,13 +11,17 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { CgMenuMotion } from "react-icons/cg";
 import "./Navbar.css";
 import Image from "next/image";
+import { useCart } from "@/context/CartContext";
 
 const Navbar: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>("");
-  const { setSearchQuery } = useSearch();
-  const { user, logout } = useAuth();
   const [showPopup, setShowPopup] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const { setSearchQuery } = useSearch();
+  const { user, logout } = useAuth();
+  const { products } = useCart();
+
 
   const togglePopup = () => {
     setShowPopup(!showPopup);
@@ -41,6 +45,9 @@ const Navbar: React.FC = () => {
       debouncedSetSearchQuery.cancel();
     };
   }, []);
+
+  const totalQuantity = products.reduce((sum, product) => sum + product.quantity, 0);
+
 
   return (
     <nav className="navbar">
@@ -69,7 +76,7 @@ const Navbar: React.FC = () => {
           <li>Home</li>
         </Link>
         <Link href="/cart">
-          <li>Cart</li>
+          <li>Cart ({totalQuantity})</li>
         </Link>
         <div className="relative">
           {user ? (

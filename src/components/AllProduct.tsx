@@ -7,13 +7,14 @@ import { Product } from "../types";
 import { productCache } from "../cache";
 import { useSearch } from "@/context/SearchProvider";
 import { useAuth } from "@/context/AuthContext";
-
+import { useCart } from "@/context/CartContext";
 
 const AllProduct: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const { searchQuery } = useSearch();
   const router = useRouter();
   const { user } = useAuth();
+  const { addToCart } = useCart();
 
   useEffect(() => {
     const cachedData = productCache.getData();
@@ -28,7 +29,7 @@ const AllProduct: React.FC = () => {
           const data: Product[] = await response.json();
           console.log(data, "Data is there or not ");
           setProducts(data);
-          productCache.setData(data); // Cache the data
+          productCache.setData(data);
         } catch (error) {
           console.error("Error fetching data:", error);
         }
@@ -37,36 +38,18 @@ const AllProduct: React.FC = () => {
     }
   }, []);
 
-  const addToCart = async (product: Product): Promise<void> => {
+  const handleAddToCart = async (product: Product): Promise<void> => {
     if (!user) {
       router.push("/login");
       return;
     }
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_CART_API}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(product),
-      });
-      if (response.ok) {
-        console.log("Product added to cart successfully");
-        alert("Product added to cart!");
-      } else {
-        console.error("Failed to add product to cart");
-        alert("Already added to cart");
-      }
-    } catch (error) {
-      console.error("Error adding product to cart", error);
-    }
+    await addToCart(product);
   };
 
   const goToSinglePage = (productId: string) => {
     router.push(`/singleProduct?productId=${productId}`);
   };
 
-  // Filter products based on search query
   const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -110,7 +93,7 @@ const AllProduct: React.FC = () => {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  addToCart(product);
+                  handleAddToCart(product);
                 }}
                 className="border-2 px-5 py-2 mt-4 ml-3 border-blue-500 text-blue-500 font-bold"
               >

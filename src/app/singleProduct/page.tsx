@@ -6,6 +6,7 @@ import Image from "next/image";
 import { productCache } from "@/cache";
 import { Product } from "@/types";
 import { useAuth } from "@/context/AuthContext";
+import { useCart } from "@/context/CartContext";
 import { Suspense } from "react";
 
 const ProductDetails: React.FC<{ productId: string | null }> = ({
@@ -13,6 +14,7 @@ const ProductDetails: React.FC<{ productId: string | null }> = ({
 }) => {
   const [product, setProduct] = useState<Product | null>(null);
   const { user } = useAuth();
+  const { addToCart } = useCart();
   const router = useRouter();
 
   useEffect(() => {
@@ -46,30 +48,13 @@ const ProductDetails: React.FC<{ productId: string | null }> = ({
     return <div>Loading...</div>;
   }
 
-  const addToCart = async (product: Product): Promise<void> => {
+  const handleAddToCart = async (product: Product): Promise<void> => {
     if (!user) {
       router.push("/login");
       return;
     }
 
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_CART_API}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(product),
-      });
-      if (response.ok) {
-        console.log("Product added to cart successfully");
-        alert("Product added to cart!");
-      } else {
-        console.error("Failed to add product to cart");
-        alert("Already added to cart");
-      }
-    } catch (error) {
-      console.error("Error adding product to cart", error);
-    }
+    await addToCart(product);
   };
 
   return (
@@ -133,7 +118,7 @@ const ProductDetails: React.FC<{ productId: string | null }> = ({
             </p>
           </div>
           <button
-            onClick={() => addToCart(product)}
+            onClick={() => handleAddToCart(product)}
             className="mt-6 px-4 py-2 bg-blue-500 text-white font-bold rounded"
           >
             Add to Cart
