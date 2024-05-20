@@ -51,12 +51,12 @@ function CartPage(): JSX.Element {
 
   return (
     <div className="flex justify-evenly  pt-[100px]">
-      <div className="w-[25%] border-2 bg-sky-200">
+      <div className="w-[25%] border-2 bg-sky-200  overflow-y-auto h-screen fixed left-2">
         <div className=" font-bold text-xl py-4 px-2 bg-slate-100 h-[100px]">
           Cart Total: ₹ {calculateTotal()}.00
         </div>
       </div>
-      <div className="w-[70%]">
+      <div className="w-[70%] ml-[25%]">
         <div className="grid gap-5 lg:grid-cols-3 md:grid-cols-2 grid-cols-1">
           {filteredProducts?.map((prod) => (
             <div

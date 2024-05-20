@@ -3,7 +3,7 @@ import AllProduct from "@/components/AllProduct";
 
 const Home: React.FC = () => {
   return (
-    <main className="pt-[100px]">
+    <main className="pt-[80px]">
       <AllProduct />
     </main>
   );
