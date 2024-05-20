@@ -6,6 +6,7 @@
   padding-top: 20px;
   background-color: #e2e8f0;
   position: fixed;
+  z-index: 9999;
   width: 100%;
 }
 
@@ -30,10 +31,6 @@
   width: 100%;
 }
 
-.menu {
-  display: none;
-}
-
 .menu-items {
   display: flex;
   align-items: center;
@@ -50,32 +47,32 @@
   color: #2b6cb0;
 }
 
-.menu .username {
-  border: 2px solid #2b6cb0;
-  padding: 0.5rem 1rem;
-  color: #2b6cb0;
+.username {
+  color: #2d08ff;
   font-weight: bold;
   cursor: pointer;
+  border: 2px solid #2d08ff;
+  padding: 0.3rem 1.3rem;
 }
 
-.menu .popup {
+.popup {
   position: absolute;
   top: 2.5rem;
   right: 0;
-  border: 2px solid #e2e8f0;
   background: white;
   color: black;
-  border-radius: 0.25rem;
+  padding-left: 0.5rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  width: 90px;
   box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-  padding: 0.5rem;
 }
 
-.menu .popup button {
-  background: #e53e3e;
-  color: white;
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
-  cursor: pointer;
+.logout-btn {
+  color: red;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .hamburger {

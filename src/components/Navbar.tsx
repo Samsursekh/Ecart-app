@@ -13,6 +13,7 @@ import "./Navbar.css";
 import Image from "next/image";
 import { useCart } from "@/context/CartContext";
 import { IoCartOutline } from "react-icons/io5";
+import { AiOutlineLogout } from "react-icons/ai";
 
 const Navbar: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>("");
@@ -55,8 +56,10 @@ const Navbar: React.FC = () => {
     <nav className="navbar">
       <Link href={"/"}>
         <div className="flex items-center justify-between">
-          <Image src={logo} width={40} height={40} alt="logo-image" />
-          <h2 className="text-blue-700 font-bold text-xl"> ECart</h2>
+          <Image src={logo} width={36} height={36} alt="logo-image" />
+          <h2 className="text-blue-600 font-bold text-xl font-serif">
+            EC<span className="text-blue-800">ART</span>
+          </h2>
         </div>
       </Link>
       <div className="search-container">
@@ -75,30 +78,38 @@ const Navbar: React.FC = () => {
       </div>
       <ul className={`menu-items ${menuOpen ? "open" : ""}`}>
         <Link href="/">
-          <li>Home</li>
+          <li onClick={toggleMenu}>Home</li>
         </Link>
         <Link href="/cart">
-          <li>
+          <li onClick={toggleMenu}>
             <span className="flex justify-between items-center">
-              <IoCartOutline size={30} /> <span className="bg-red-600 rounded-full px-[5px] -ml-2 -mt-3 text-white">{totalQuantity}</span>
+              <IoCartOutline size={30} />{" "}
+              <span className="bg-blue-700 rounded-full px-[7px] -ml-2 -mt-3 text-white">
+                {totalQuantity}
+              </span>
             </span>
           </li>
         </Link>
         <div className="relative">
           {user ? (
-            <div className="flex items-center space-x-4">
+            <div className="">
               <button className="username " onClick={togglePopup}>
                 {user.username}
               </button>
               {showPopup && (
                 <div className="popup">
-                  <button onClick={logout}>Logout</button>
+                  <button onClick={logout} className="logout-btn">
+                    Logout
+                    <span>
+                      <AiOutlineLogout />
+                    </span>
+                  </button>
                 </div>
               )}
             </div>
           ) : (
             <Link href="/login">
-              <li>Login</li>
+              <li onClick={toggleMenu}>Login</li>
             </Link>
           )}
         </div>
