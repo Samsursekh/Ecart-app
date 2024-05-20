@@ -12,6 +12,7 @@ import { CgMenuMotion } from "react-icons/cg";
 import "./Navbar.css";
 import Image from "next/image";
 import { useCart } from "@/context/CartContext";
+import { IoCartOutline } from "react-icons/io5";
 
 const Navbar: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>("");
@@ -21,7 +22,6 @@ const Navbar: React.FC = () => {
   const { setSearchQuery } = useSearch();
   const { user, logout } = useAuth();
   const { products } = useCart();
-
 
   const togglePopup = () => {
     setShowPopup(!showPopup);
@@ -46,8 +46,10 @@ const Navbar: React.FC = () => {
     };
   }, []);
 
-  const totalQuantity = products.reduce((sum, product) => sum + product.quantity, 0);
-
+  const totalQuantity = products.reduce(
+    (sum, product) => sum + product.quantity,
+    0
+  );
 
   return (
     <nav className="navbar">
@@ -76,12 +78,16 @@ const Navbar: React.FC = () => {
           <li>Home</li>
         </Link>
         <Link href="/cart">
-          <li>Cart ({totalQuantity})</li>
+          <li>
+            <span className="flex justify-between items-center">
+              <IoCartOutline size={30} /> <span className="bg-red-600 rounded-full px-[5px] -ml-2 -mt-3 text-white">{totalQuantity}</span>
+            </span>
+          </li>
         </Link>
         <div className="relative">
           {user ? (
             <div className="flex items-center space-x-4">
-              <button className="username" onClick={togglePopup}>
+              <button className="username " onClick={togglePopup}>
                 {user.username}
               </button>
               {showPopup && (
